@@ -224,6 +224,7 @@ Melakukan restart bind9 `service bind9 restart`
 ## Soal 4
 ***Buat juga reverse domain untuk domain utama***<br><br>
 Membuat reverse yang merupakan keterbalikan prefix. Kelompok kami memiliki prefix 10.7 maka akan menjadi 7.10. Sehingga dibuat file baru yang berisi code pada no. 2 dan diganti prefixnya menjadi seperti di bawah ini pada console wise.
+
 ```
 echo '
 zone "wise.b08.com" {
@@ -249,6 +250,7 @@ echo "
 2                       IN      PTR     wise.b08.com.
 "> /etc/bind/wise/2.7.10.in-addr.arpa
 ```
+
 <br>
 	
 Melakukan restart bind9 `service bind9 restart`
@@ -403,6 +405,7 @@ Melakukan restart bind9 `service bind9 restart`
 ## Soal 7
 ***Untuk informasi yang lebih spesifik mengenai Operation Strix, buatlah subdomain melalui Berlint dengan akses strix.operation.wise.yyy.com dengan alias www.strix.operation.wise.yyy.com yang mengarah ke Eden***<br><br>
 Membuat subdomain strix.operation.wise.b08.com dengan CNAMEnya pada berlint 
+
 ```
 echo "
 \$TTL    604800
@@ -420,6 +423,7 @@ strix           IN      A               10.7.2.3       ;IP Eden
 www.strix       IN      CNAME           strix.operation.wise.b08.com.
 " > /etc/bind/operation/operation.wise.b08.com
 ```
+
 <br>
 Melakukan restart bind9 `service bind9 restart`
 
@@ -431,12 +435,14 @@ Melakukan restart bind9 `service bind9 restart`
 
 **Client Garden**   
 Melakukan `apt-get update` dengan cara    
+
 ```
 apt-get update
 ```
   
 **Server Eden**      
 Melakukan instalasi Apache, php, openssl untuk melakukan download ke website https dengan cara
+
 ```
 apt-get install apache2 -y
 service apache2 start
@@ -445,7 +451,9 @@ apt-get install libapache2-mod-php7.0 -y
 service apache2 
 apt-get install ca-certificates openssl -y
 ```
+
 konfigurasi file `/etc/apache2/sites-available/wise.b08.com.conf`. DcumentRoot diletakkan  di /var/www/wise.b08.com. Jangan lupa untuk menambah servername dan serveralias  
+
 ```
 <VirtualHost *:80>
 
@@ -458,7 +466,9 @@ konfigurasi file `/etc/apache2/sites-available/wise.b08.com.conf`. DcumentRoot d
         CustomLog \${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
 ```
+
 Lalu lakukan membuat sebuah direkroti root untuk server wise.b08.com dan melakukan copy file content
+
 ```
 a2ensite wise.b08.com
 mkdir /var/www/wise.b08.com
@@ -478,7 +488,8 @@ Test dengan `lynx wise.b08.com`
 ***Setelah itu, Loid juga membutuhkan agar url www.wise.yyy.com/index.php/home dapat menjadi menjadi www.wise.yyy.com/home***<br><br>
 	
 **Server Eden**     
-konfigurasi file `/var/www/wise.b08.com/.htaccess` dengan    
+konfigurasi file `/var/www/wise.b08.com/.htaccess` dengan  
+
 ```
 a2enmod rewrite
 service apache2 restart
@@ -488,8 +499,10 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule (.*) /index.php/\$1 [L]
 ```
+
 Inti dari konfigurasi tersebut adalah kita melakukan cek apakah request tersebut adalah ke file atau bukan dan ke direktori atau bukan jika hal tersebut terpenuhi aka kita membuat rule untuk melakukan direct ke /index.php/home. $1 merupakan parameter yang diinputkan di url
 konfigurasi file `/etc/apache2/sites-available/wise.b08.com.conf` dengan  
+
 ```
 <VirtualHost *:80>
         ServerAdmin webmaster@localhost
@@ -506,6 +519,7 @@ konfigurasi file `/etc/apache2/sites-available/wise.b08.com.conf` dengan
         </Directory>
 </VirtualHost>
 ```
+
 Melakukan restart service apache2 dengan `service apache2 restart`	
 
 **TESTING**
@@ -519,6 +533,7 @@ Test dengan `lynx www.wise.b08.com/home`
 	
 **Server Eden**    
 konfigurasi file `/etc/apache2/sites-available/eden.wise.b08.com.conf` dengan  
+
 ```
 <VirtualHost *:80>
         ServerAdmin webmaster@localhost
@@ -535,13 +550,16 @@ konfigurasi file `/etc/apache2/sites-available/eden.wise.b08.com.conf` dengan
         </Directory>
 </VirtualHost>
 ```
+
 Lalu aktifkan virtualhost dengan a2ensite, membuat direktori untuk documentroot di /var/www.eden.wise.b08.com dan jangan lupa untuk melakukan copy content ke documentroot dengan cara
+
 ```
 a2ensite super.franky.t07.com
 mkdir /var/www/super.franky.t07.com
 cp -r /root/Praktikum-Modul-2-Jarkom/super.franky/. /var/www/super.franky.t07.com
 service apache2 restart
 ```
+
 konfigurasi file `/var/www/eden.wise.b08.com/index.php` dengan `echo "<?php echo 'tes.. ini nomor 10' ?>"`
 
 **TESTING**
@@ -555,6 +573,7 @@ Test dengan `lynx www.eden.wise.b08.com/home`
 	
 **Server Eden**    
 konfigurasi file `/etc/apache2/sites-available/eden.wise.b08.com.conf` menamahkan Options +Indexes ke direktori yang ingin di directory list dengan  
+
 ```
 <VirtualHost *:80>
 
@@ -576,6 +595,7 @@ konfigurasi file `/etc/apache2/sites-available/eden.wise.b08.com.conf` menamahka
         </Directory>
 </VirtualHost>
 ```     
+
 Melakukan restart service apache2 dengan `service apache2 restart` 
 
 **TESTING**
@@ -586,6 +606,7 @@ Melakukan restart service apache2 dengan `service apache2 restart`
 	
 **Server Eden**    
 konfigurasi file `/etc/apache2/sites-available/eden.wise.b08.com.conf` menambahkan konfigurasi ErrorDocument untuk setiap error yang ada yang diarahkan ke file /error/404.html dengan  
+
 ```
 <VirtualHost *:80>
         ServerAdmin webmaster@localhost
@@ -612,6 +633,7 @@ konfigurasi file `/etc/apache2/sites-available/eden.wise.b08.com.conf` menambahk
         </Directory>
 </VirtualHost>
 ```     
+
 Melakukan restart service apache2 dengan `service apache2 restart`   
 
 **TESTING**
@@ -622,6 +644,7 @@ Melakukan restart service apache2 dengan `service apache2 restart`
 	
 **Server Eden**
 Konfigurasi File `/etc/apache2/sites-avalaible/eden.wise.b08.com.conf` untuk menambahkan konfigurasi Alias dengan
+
 ```
 <VirtualHost *:80>
 
@@ -652,10 +675,12 @@ Konfigurasi File `/etc/apache2/sites-avalaible/eden.wise.b08.com.conf` untuk men
         </Directory>
 </VirtualHost>
 ```
+
 Melakukan restart service apache2 dengan `service apache2 restart`
 	
 	
 **TESTING**
+
 <img alt="test131" src="pic/test131.png">
 <img alt="test13" src="pic/test13.png">
 	
@@ -663,7 +688,9 @@ Melakukan restart service apache2 dengan `service apache2 restart`
 ***Loid meminta agar www.strix.operation.wise.yyy.com hanya bisa diakses dengan port 15000 dan port 15500***<br><br>
 
 **Server Eden**
+
 Konfigurasi file `/etc/apache2/sites-available/strix.operation.wise.b08.com.conf` disini menambahkan VirtualHost baru pada port 15000 dan 15500 dengan
+
 ```
 <VirtualHost *:15000>
 
@@ -687,7 +714,9 @@ Konfigurasi file `/etc/apache2/sites-available/strix.operation.wise.b08.com.conf
         CustomLog \${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
 ```
+
 Selanjutnya lakukan
+
 ```
 a2ensite strix.operation.wise.b08.com
 service apache2 restart
@@ -700,7 +729,9 @@ Konfigurasi File `/var/www/strix.operation.wise.b08.com/index.php` dengan
         echo 'no. 14';
 ?>
 ```
+
 Konfigurasi file `/etc/apache2/ports.conf` untuk menambahkan Listen port 15000 dan 15500 dengan
+
 ```
 Listen 80
 Listen 15000
@@ -713,9 +744,11 @@ Listen 15500
         Listen 443
 </IfModule>
 ```
+
 melakukan restart apache2 dengan `service apache2 restart`
 	
 **TESTING**
+
 <img alt="test14" src="pic/test14.png">
 
 ## Soal 15
@@ -724,6 +757,7 @@ melakukan restart apache2 dengan `service apache2 restart`
 **Server Eden**
 Jalankan Command `htpasswd -c -b /etc/apache2/.htpasswd Twilight opStrix`
 Konfigurasi file `/etc/apache2/sites-available/strix.operation.wise.b08.com.conf` dengan
+
 ```
 <VirtualHost *:15000>
 
@@ -759,9 +793,11 @@ Konfigurasi file `/etc/apache2/sites-available/strix.operation.wise.b08.com.conf
         CustomLog \${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
 ```
+
 Melakukan restart apache2 dengan ` service apache2 restart`
 
 **TESTING**
+
 <img alt="test15" src="pic/test15.png">
 
 ## Soal 16
@@ -769,6 +805,7 @@ Melakukan restart apache2 dengan ` service apache2 restart`
 	
 **Server Eden**
 Konfigurasi file `/etc/apache2/sites-available/000-default.conf` dengan 
+
 ```
 <VirtualHost *:80>
 
@@ -784,9 +821,11 @@ Konfigurasi file `/etc/apache2/sites-available/000-default.conf` dengan
 
 </VirtualHost>
 ```
+
 melakukan restart apache2 dengan `service apache2 restart`
 
 **TESTING**
+
 <img alt="test16" src="pic/test16.png">
 
 ## Soal 17
@@ -794,6 +833,7 @@ melakukan restart apache2 dengan `service apache2 restart`
 
 **Server Eden**
 Konfigurasi `/var/www/eden.wise.b08.com/.htaccess` dengan
+
 ```
 echo "
 RewriteEngine On
@@ -802,7 +842,9 @@ RewriteCond %{REQUEST_URI} !/public/images/eden.png
 RewriteRule /.* http://eden.wise.b08.com/public/images/eden.png [L]
 "
 ```
+
 Konfigurasi file `/etc/apache2/sites-available/eden.wise.b08.com.conf` dengan
+
 ```
 echo "
 <VirtualHost *:80>
@@ -838,17 +880,20 @@ echo "
 </VirtualHost>
 "
 ```
+
 Melakukan restart apache2 dengan `service apache2 restart`
 
 **TESTING**
+
 <img alt="test17" src="pic/test17.png">
 
 
 ## Kendala
   + Aaliyah Farah Adibah
-    	1. Baru dalam menggunakan GNS
-	2. GNS sempat error saat awal-awal praktikum
+    	1. Baru dalam menggunakan GNS 
+	2. GNS sempat error saat awal-awal praktikum 
 	3. Internal Server Error saat diakhir-akhir padahal sudah mengikuti step-step yang ada di modul
+	4. Sempat error di lynx
 	
   + Rafael Asi Kristanto Tambunan
 	1. Penggunaan GNS yang masih baru
