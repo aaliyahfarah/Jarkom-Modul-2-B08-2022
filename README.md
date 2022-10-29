@@ -594,6 +594,7 @@ Melakukan restart service apache2 dengan `service apache2 restart`
     	1. Baru dalam menggunakan GNS
 	2. GNS sempat error saat awal-awal praktikum
 	3. Internal Server Error saat diakhir-akhir padahal sudah mengikuti step-step yang ada di modul
+	
   + Rafael Asi Kristanto Tambunan
 	1. Penggunaan GNS yang masih baru
 	2. GNS yang sering error saat digunakan
