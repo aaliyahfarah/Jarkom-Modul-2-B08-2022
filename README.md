@@ -513,9 +513,65 @@ konfigurasi file `/var/www/eden.wise.b08.com/index.php` dengan `echo "<?php echo
 
 ## Soal 11
 ***Akan tetapi, pada folder /public, Loid ingin hanya dapat melakukan directory listing saja***<br><br>
+	
+**Server Eden**    
+konfigurasi file `/etc/apache2/sites-available/eden.wise.b08.com.conf` menamahkan Options +Indexes ke direktori yang ingin di directory list dengan  
+```
+<VirtualHost *:80>
+
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/eden.wise.b08.com
+        ServerName eden.wise.b08.com
+        ServerAlias www.eden.wise.b08.com
+
+        <Directory /var/www/eden.wise.b08.com/public>
+                Options +Indexes
+        </Directory>
+
+        ErrorLog \${APACHE_LOG_DIR}/error.log
+        CustomLog \${APACHE_LOG_DIR}/access.log combined
+
+        <Directory /var/www/wise.b08.com>
+                Options +FollowSymLinks -Multiviews
+                AllowOverride All
+        </Directory>
+</VirtualHost>
+```     
+Melakukan restart service apache2 dengan `service apache2 restart`    
 
 ## Soal 12
 ***Tidak hanya itu, Loid juga ingin menyiapkan error file 404.html pada folder /error untuk mengganti error kode pada apache***<br><br>
+	
+**Server Eden**    
+konfigurasi file `/etc/apache2/sites-available/eden.wise.b08.com.conf` menambahkan konfigurasi ErrorDocument untuk setiap error yang ada yang diarahkan ke file /error/404.html dengan  
+```
+<VirtualHost *:80>
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/eden.wise.b08.com
+        ServerName eden.wise.b08.com
+        ServerAlias www.eden.wise.b08.com
+
+        ErrorDocument 404 /error/404.html
+        ErrorDocument 500 /error/404.html
+        ErrorDocument 502 /error/404.html
+        ErrorDocument 503 /error/404.html
+        ErrorDocument 504 /error/404.html
+
+        <Directory /var/www/eden.wise.b08.com/public>
+                Options +Indexes
+        </Directory>
+
+        ErrorLog \${APACHE_LOG_DIR}/error.log
+        CustomLog \${APACHE_LOG_DIR}/access.log combined
+
+        <Directory /var/www/wise.b08.com>
+                Options +FollowSymLinks -Multiviews
+                AllowOverride All
+        </Directory>
+</VirtualHost>
+```     
+Melakukan restart service apache2 dengan `service apache2 restart`   
+
 
 ## Soal 13
 ***Loid juga meminta Franky untuk dibuatkan konfigurasi virtual host. Virtual host ini bertujuan untuk dapat mengakses file asset www.eden.wise.yyy.com/public/js menjadi www.eden.wise.yyy.com/js***<br><br>
