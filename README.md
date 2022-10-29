@@ -352,8 +352,6 @@ zone "2.7.10.in-addr.arpa" {
 ' >  /etc/bind/named.conf.local
 ```
 	
-<br>
-	
 Melakukan restart bind9 `service bind9 restart`
 	
 <br>
@@ -424,7 +422,6 @@ www.strix       IN      CNAME           strix.operation.wise.b08.com.
 " > /etc/bind/operation/operation.wise.b08.com
 ```
 
-<br>
 Melakukan restart bind9 `service bind9 restart`
 
 **TESTING**
