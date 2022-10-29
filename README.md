@@ -410,6 +410,44 @@ service bind9 restart
 ## Soal 8
 ***Setelah melakukan konfigurasi server, maka dilakukan konfigurasi Webserver. Pertama dengan webserver www.wise.yyy.com. Pertama, Loid membutuhkan webserver dengan DocumentRoot pada /var/www/wise.yyy.com***<br><br>
 
+**Client Garden**   
+Melakukan `apt-get update` dengan cara    
+```
+apt-get update
+```
+  
+**Server Eden**      
+Melakukan instalasi Apache, php, openssl untuk melakukan download ke website https dengan cara
+```
+apt-get install apache2 -y
+service apache2 start
+apt-get install php -y
+apt-get install libapache2-mod-php7.0 -y
+service apache2 
+apt-get install ca-certificates openssl -y
+```
+konfigurasi file `/etc/apache2/sites-available/wise.b08.com.conf`. DcumentRoot diletakkan  di /var/www/wise.b08.com. Jangan lupa untuk menambah servername dan serveralias  
+```
+<VirtualHost *:80>
+
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/wise.b08.com
+        ServerName wise.b08.com
+        ServerAlias www.wise.b08.com
+
+        ErrorLog \${APACHE_LOG_DIR}/error.log
+        CustomLog \${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+```
+Lalu lakukan membuat sebuah direkroti root untuk server wise.b08.com dan melakukan copy file content
+```
+a2ensite wise.b08.com
+mkdir /var/www/wise.b08.com
+cp -r /root/Jarkom-Modul-2-B08-2022/wise/. /var/www/wise.b08.com
+service apache2 restart
+```
+
+
 ## Soal 9
 ***Setelah itu, Loid juga membutuhkan agar url www.wise.yyy.com/index.php/home dapat menjadi menjadi www.wise.yyy.com/home***<br><br>
 
