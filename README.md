@@ -144,6 +144,7 @@ file "/etc/bind/wise/wise.b08.com";
 ```
 
 Menjadikan Berlint sebagai DNS Slave
+	
 ```
 apt-get install bind9 -y
 
@@ -186,8 +187,10 @@ echo "
 www             IN      CNAME   wise.b08.com.
 " > /etc/bind/wise/wise.b08.com
 ```
-<br>
+
 Melakukan restart bind9 `service bind9 restart`
+
+	
 **TESTING**
 <img alt="test2" src="pic/test2.png">
 
@@ -211,9 +214,10 @@ eden            IN      A       10.7.2.3 ; IP Eden
 www.eden        IN      CNAME   eden.wise.b08.com.
 " > /etc/bind/wise/wise.b08.com
 ```
-<br>
+
 Melakukan restart bind9 `service bind9 restart`
 
+	
 **TESTING**
 <img alt="test3" src="pic/test3.png">
 
@@ -246,14 +250,17 @@ echo "
 "> /etc/bind/wise/2.7.10.in-addr.arpa
 ```
 <br>
+	
 Melakukan restart bind9 `service bind9 restart`
 
+	
 **TESTING**
 <img alt="test4" src="pic/test4.png">
 
 ## Soal 5
 ***Agar dapat tetap dihubungi jika server WISE bermasalah, buatlah juga Berlint sebagai DNS Slave untuk domain utama***<br><br>
 Apabila bermasalah akan menghubungi Berlint yang dideklarasikan sebagai DNS Slave (nomor 1) pada console wise
+	
 ```
 echo '
 zone "wise.b08.com" {
@@ -269,8 +276,11 @@ zone "2.7.10.in-addr.arpa" {
         file "/etc/bind/wise/2.7.10.in-addr.arpa";
 };' > /etc/bind/named.conf.local
 ```
+	
 <br>
+	
 Melakukan restart bind9 `service bind9 restart`. Lalu, Tambahkan deklarasi pada Garden dan juga Eden
+	
 ```
 echo "
 nameserver 10.7.3.2  //IP WISE
@@ -279,7 +289,9 @@ nameserver 10.7.2.3  //IP EDEN
 
 " > /etc/resolv.conf
 ```
+	
 Jangan lupa untuk menginstall dnsutils dan lynx pada Garden dan Eden
+	
 ```
 apt-get install dnsutils -y
 apt-get install lynx -y
@@ -287,10 +299,12 @@ apt-get install lynx -y
 
 **TESTING**
 <img alt="test5" src="pic/test5.png">
+<img alt="test51" src="pic/test51.png">
 
 ## Soal 6
 ***Karena banyak informasi dari Handler, buatlah subdomain yang khusus untuk operation yaitu operation.wise.yyy.com dengan alias www.operation.wise.yyy.com yang didelegasikan dari WISE ke Berlint dengan IP menuju ke Eden dalam folder operation***<br><br>
 Menambahkan subdomain untuk operation yaitu operation.wise.b08.com beserta CNAME. Berikut code yang dimasukkan ke dalam WISE:
+	
 ```
 echo "
 \$TTL    604800
@@ -335,10 +349,15 @@ zone "2.7.10.in-addr.arpa" {
 };
 ' >  /etc/bind/named.conf.local
 ```
+	
 <br>
+	
 Melakukan restart bind9 `service bind9 restart`
+	
 <br>
+	
 Berikut code yang dimasukkan ke dalam Berlint:
+	
 ```
 echo "
 options {
@@ -375,6 +394,7 @@ echo "
 www             IN      CNAME           operation.wise.b08.com.
 " > /etc/bind/operation/operation.wise.b08.com
 ```
+	
 Melakukan restart bind9 `service bind9 restart`
 
 **TESTING**
@@ -447,7 +467,12 @@ service apache2 restart
 ```
 
 **TESTING**
+	
+Test dengan `lynx wise.b08.com`
+	
 <img alt="test8" src="pic/test8.png">
+<img alt="test81" src="pic/test81.png">
+
 
 ## Soal 9
 ***Setelah itu, Loid juga membutuhkan agar url www.wise.yyy.com/index.php/home dapat menjadi menjadi www.wise.yyy.com/home***<br><br>
@@ -484,6 +509,9 @@ konfigurasi file `/etc/apache2/sites-available/wise.b08.com.conf` dengan
 Melakukan restart service apache2 dengan `service apache2 restart`	
 
 **TESTING**
+	
+Test dengan `lynx www.wise.b08.com/home`
+	
 <img alt="test9" src="pic/test9.png">
 
 ## Soal 10
@@ -517,6 +545,9 @@ service apache2 restart
 konfigurasi file `/var/www/eden.wise.b08.com/index.php` dengan `echo "<?php echo 'tes.. ini nomor 10' ?>"`
 
 **TESTING**
+
+Test dengan `lynx www.eden.wise.b08.com/home`
+
 <img alt="test10" src="pic/test10.png">
 
 ## Soal 11
@@ -625,6 +656,7 @@ Melakukan restart service apache2 dengan `service apache2 restart`
 	
 	
 **TESTING**
+<img alt="test131" src="pic/test131.png">
 <img alt="test13" src="pic/test13.png">
 	
 ## Soal 14
