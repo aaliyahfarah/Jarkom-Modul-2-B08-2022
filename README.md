@@ -130,15 +130,7 @@ Pada Foosha dibuat script yang berisi seperti di bawah agar semua node dapat ter
  ```
  echo "nameserver 192.168.122.1" > /etc/resolv.conf
  ```
- Coba untuk **apt-get update** untuk mengetahui apakah sudah bisa mengakses internet dan mengupdate
- 
- <br>
- Hasil:
- <img alt="peta" src="pic/wiseupdate.png">
- <img alt="peta" src="pic/sssupdate.png">
- <img alt="peta" src="pic/gardenupdate.png">
- <img alt="peta" src="pic/berlintupdate.png">
- <img alt="peta" src="pic/edenupdate.png">
+ Coba untuk `apt-get update` atau `ping google.com` untuk mengetahui apakah sudah bisa mengakses internet
  <br>
  
 Menjadikan WISE sebagai DNS Master
@@ -163,6 +155,13 @@ zone "wise.b08.com" {
 };
 ' > /etc/bind/named.conf.local
 ```
+
+**TESTING**
+ <img alt="peta" src="pic/wiseupdate.png">
+ <img alt="peta" src="pic/sssupdate.png">
+ <img alt="peta" src="pic/gardenupdate.png">
+ <img alt="peta" src="pic/berlintupdate.png">
+ <img alt="peta" src="pic/edenupdate.png">
  
 ## Soal 2
 ***Untuk mempermudah mendapatkan informasi mengenai misi dari Handler, bantulah Loid membuat website utama dengan akses wise.yyy.com dengan alias www.wise.yyy.com pada folder wise***<br><br>
@@ -189,6 +188,8 @@ www             IN      CNAME   wise.b08.com.
 ```
 <br>
 Melakukan restart bind9 `service bind9 restart`
+**TESTING**
+<img alt="test2" src="pic/test2.png">
 
 ## Soal 3
 ***Setelah itu ia juga ingin membuat subdomain eden.wise.yyy.com dengan alias www.eden.wise.yyy.com yang diatur DNS-nya di WISE dan mengarah ke Eden***<br><br>
@@ -212,6 +213,9 @@ www.eden        IN      CNAME   eden.wise.b08.com.
 ```
 <br>
 Melakukan restart bind9 `service bind9 restart`
+
+**TESTING**
+<img alt="test3" src="pic/test3.png">
 
 ## Soal 4
 ***Buat juga reverse domain untuk domain utama***<br><br>
@@ -243,6 +247,9 @@ echo "
 ```
 <br>
 Melakukan restart bind9 `service bind9 restart`
+
+**TESTING**
+<img alt="test4" src="pic/test4.png">
 
 ## Soal 5
 ***Agar dapat tetap dihubungi jika server WISE bermasalah, buatlah juga Berlint sebagai DNS Slave untuk domain utama***<br><br>
@@ -277,6 +284,9 @@ Jangan lupa untuk menginstall dnsutils dan lynx pada Garden dan Eden
 apt-get install dnsutils -y
 apt-get install lynx -y
 ```
+
+**TESTING**
+<img alt="test5" src="pic/test5.png">
 
 ## Soal 6
 ***Karena banyak informasi dari Handler, buatlah subdomain yang khusus untuk operation yaitu operation.wise.yyy.com dengan alias www.operation.wise.yyy.com yang didelegasikan dari WISE ke Berlint dengan IP menuju ke Eden dalam folder operation***<br><br>
@@ -367,6 +377,8 @@ www             IN      CNAME           operation.wise.b08.com.
 ```
 Melakukan restart bind9 `service bind9 restart`
 
+**TESTING**
+<img alt="test6" src="pic/test6.png">
 
 ## Soal 7
 ***Untuk informasi yang lebih spesifik mengenai Operation Strix, buatlah subdomain melalui Berlint dengan akses strix.operation.wise.yyy.com dengan alias www.strix.operation.wise.yyy.com yang mengarah ke Eden***<br><br>
@@ -390,6 +402,9 @@ www.strix       IN      CNAME           strix.operation.wise.b08.com.
 ```
 <br>
 Melakukan restart bind9 `service bind9 restart`
+
+**TESTING**
+<img alt="test7" src="pic/test7.png">
 
 ## Soal 8
 ***Setelah melakukan konfigurasi server, maka dilakukan konfigurasi Webserver. Pertama dengan webserver www.wise.yyy.com. Pertama, Loid membutuhkan webserver dengan DocumentRoot pada /var/www/wise.yyy.com***<br><br>
@@ -431,6 +446,9 @@ cp -r /root/Jarkom-Modul-2-B08-2022/wise/. /var/www/wise.b08.com
 service apache2 restart
 ```
 
+**TESTING**
+<img alt="test8" src="pic/test8.png">
+
 ## Soal 9
 ***Setelah itu, Loid juga membutuhkan agar url www.wise.yyy.com/index.php/home dapat menjadi menjadi www.wise.yyy.com/home***<br><br>
 	
@@ -465,6 +483,9 @@ konfigurasi file `/etc/apache2/sites-available/wise.b08.com.conf` dengan
 ```
 Melakukan restart service apache2 dengan `service apache2 restart`	
 
+**TESTING**
+<img alt="test9" src="pic/test9.png">
+
 ## Soal 10
 ***Setelah itu, pada subdomain www.eden.wise.yyy.com, Loid membutuhkan penyimpanan aset yang memiliki DocumentRoot pada /var/www/eden.wise.yyy.com***<br><br>
 	
@@ -495,6 +516,9 @@ service apache2 restart
 ```
 konfigurasi file `/var/www/eden.wise.b08.com/index.php` dengan `echo "<?php echo 'tes.. ini nomor 10' ?>"`
 
+**TESTING**
+<img alt="test10" src="pic/test10.png">
+
 ## Soal 11
 ***Akan tetapi, pada folder /public, Loid ingin hanya dapat melakukan directory listing saja***<br><br>
 	
@@ -521,7 +545,10 @@ konfigurasi file `/etc/apache2/sites-available/eden.wise.b08.com.conf` menamahka
         </Directory>
 </VirtualHost>
 ```     
-Melakukan restart service apache2 dengan `service apache2 restart`    
+Melakukan restart service apache2 dengan `service apache2 restart` 
+
+**TESTING**
+<img alt="test11" src="pic/test11.png">
 
 ## Soal 12
 ***Tidak hanya itu, Loid juga ingin menyiapkan error file 404.html pada folder /error untuk mengganti error kode pada apache***<br><br>
@@ -556,6 +583,8 @@ konfigurasi file `/etc/apache2/sites-available/eden.wise.b08.com.conf` menambahk
 ```     
 Melakukan restart service apache2 dengan `service apache2 restart`   
 
+**TESTING**
+<img alt="test12" src="pic/test12.png">
 
 ## Soal 13
 ***Loid juga meminta Franky untuk dibuatkan konfigurasi virtual host. Virtual host ini bertujuan untuk dapat mengakses file asset www.eden.wise.yyy.com/public/js menjadi www.eden.wise.yyy.com/js***<br><br>
@@ -594,6 +623,9 @@ Konfigurasi File `/etc/apache2/sites-avalaible/eden.wise.b08.com.conf` untuk men
 ```
 Melakukan restart service apache2 dengan `service apache2 restart`
 	
+	
+**TESTING**
+<img alt="test13" src="pic/test13.png">
 	
 ## Soal 14
 ***Loid meminta agar www.strix.operation.wise.yyy.com hanya bisa diakses dengan port 15000 dan port 15500***<br><br>
@@ -651,6 +683,8 @@ Listen 15500
 ```
 melakukan restart apache2 dengan `service apache2 restart`
 	
+**TESTING**
+<img alt="test14" src="pic/test14.png">
 
 ## Soal 15
 ***dengan autentikasi username Twilight dan password opStrix dan file di /var/www/strix.operation.wise.yyy***<br><br>
@@ -695,6 +729,9 @@ Konfigurasi file `/etc/apache2/sites-available/strix.operation.wise.b08.com.conf
 ```
 Melakukan restart apache2 dengan ` service apache2 restart`
 
+**TESTING**
+<img alt="test15" src="pic/test15.png">
+
 ## Soal 16
 ***dan setiap kali mengakses IP Eden akan dialihkan secara otomatis ke www.wise.yyy.com**<br><br>
 	
@@ -716,6 +753,9 @@ Konfigurasi file `/etc/apache2/sites-available/000-default.conf` dengan
 </VirtualHost>
 ```
 melakukan restart apache2 dengan `service apache2 restart`
+
+**TESTING**
+<img alt="test16" src="pic/test16.png">
 
 ## Soal 17
 ***Karena website www.eden.wise.yyy.com semakin banyak pengunjung dan banyak modifikasi sehingga banyak gambar-gambar yang random, maka Loid ingin mengubah request gambar yang memiliki substring “eden” akan diarahkan menuju eden.png. Bantulah Agent Twilight dan Organisasi WISE menjaga perdamaian!***<br><br>
@@ -767,6 +807,11 @@ echo "
 "
 ```
 Melakukan restart apache2 dengan `service apache2 restart`
+
+**TESTING**
+<img alt="test17" src="pic/test17.png">
+
+
 ## Kendala
   + Aaliyah Farah Adibah
     	1. Baru dalam menggunakan GNS
