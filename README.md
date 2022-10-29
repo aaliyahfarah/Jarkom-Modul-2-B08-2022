@@ -447,9 +447,39 @@ cp -r /root/Jarkom-Modul-2-B08-2022/wise/. /var/www/wise.b08.com
 service apache2 restart
 ```
 
-
 ## Soal 9
 ***Setelah itu, Loid juga membutuhkan agar url www.wise.yyy.com/index.php/home dapat menjadi menjadi www.wise.yyy.com/home***<br><br>
+	
+**Server Skypie**     
+konfigurasi file `/var/www/wise.b08.com/.htaccess` dengan    
+```
+a2enmod rewrite
+service apache2 restart
+echo "
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule (.*) /index.php/\$1 [L]
+```
+Inti dari konfigurasi tersebut adalah kita melakukan cek apakah request tersebut adalah ke file atau bukan dan ke direktori atau bukan jika hal tersebut terpenuhi aka kita membuat rule untuk melakukan direct ke /index.php/home. $1 merupakan parameter yang diinputkan di url
+konfigurasi file `/etc/apache2/sites-available/wise.b08.com.conf` dengan  
+```
+<VirtualHost *:80>
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/wise.b08.com
+        ServerName wise.b08.com
+        ServerAlias www.wise.b08.com
+
+        ErrorLog \${APACHE_LOG_DIR}/error.log
+        CustomLog \${APACHE_LOG_DIR}/access.log combined
+
+        <Directory /var/www/wise.b08.com>
+                Options +FollowSymLinks -Multiviews
+                AllowOverride All
+        </Directory>
+</VirtualHost>
+```
+Melakukan restart service apache2 dengan `service apache2 restart`	
 
 ## Soal 10
 ***Setelah itu, pada subdomain www.eden.wise.yyy.com, Loid membutuhkan penyimpanan aset yang memiliki DocumentRoot pada /var/www/eden.wise.yyy.com***<br><br>
