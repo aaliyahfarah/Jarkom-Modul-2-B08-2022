@@ -166,7 +166,7 @@ zone "wise.b08.com" {
  
 ## Soal 2
 ***Untuk mempermudah mendapatkan informasi mengenai misi dari Handler, bantulah Loid membuat website utama dengan akses wise.yyy.com dengan alias www.wise.yyy.com pada folder wise***<br><br>
-Membuat website utama dan tambahkan record CNAME **wise.b08.com** pada folder wise.
+Membuat website utama dan tambahkan record CNAME wise.b08.com pada folder wise.
 ```
 echo 'zone "wise.b08.com" {
         type master;
@@ -188,11 +188,7 @@ www             IN      CNAME   wise.b08.com.
 " > /etc/bind/wise/wise.b08.com
 ```
 <br>
-Restart kembali bind9 nya
-
-```
-service bind9 restart
-```
+Melakukan restart bind9 `service bind9 restart`
 
 ## Soal 3
 ***Setelah itu ia juga ingin membuat subdomain eden.wise.yyy.com dengan alias www.eden.wise.yyy.com yang diatur DNS-nya di WISE dan mengarah ke Eden***<br><br>
@@ -214,10 +210,8 @@ eden            IN      A       10.7.2.3 ; IP Eden
 www.eden        IN      CNAME   eden.wise.b08.com.
 " > /etc/bind/wise/wise.b08.com
 ```
-Restart kembali bind9 nya
-```
-service bind9 restart
-```
+<br>
+Melakukan restart bind9 `service bind9 restart`
 
 ## Soal 4
 ***Buat juga reverse domain untuk domain utama***<br><br>
@@ -247,10 +241,8 @@ echo "
 2                       IN      PTR     wise.b08.com.
 "> /etc/bind/wise/2.7.10.in-addr.arpa
 ```
-Restart kembali bind9 nya
-```
-service bind9 restart
-```
+<br>
+Melakukan restart bind9 `service bind9 restart`
 
 ## Soal 5
 ***Agar dapat tetap dihubungi jika server WISE bermasalah, buatlah juga Berlint sebagai DNS Slave untuk domain utama***<br><br>
@@ -270,11 +262,8 @@ zone "2.7.10.in-addr.arpa" {
         file "/etc/bind/wise/2.7.10.in-addr.arpa";
 };' > /etc/bind/named.conf.local
 ```
-Restart kembali bind9 nya
-```
-service bind9 restart
-```
-Tambahkan deklarasi pada Garden dan juga Eden
+<br>
+Melakukan restart bind9 `service bind9 restart`. Lalu, Tambahkan deklarasi pada Garden dan juga Eden
 ```
 echo "
 nameserver 10.7.3.2  //IP WISE
@@ -336,10 +325,9 @@ zone "2.7.10.in-addr.arpa" {
 };
 ' >  /etc/bind/named.conf.local
 ```
-Restart kembali bind9 nya
-```
-service bind9 restart
-```
+<br>
+Melakukan restart bind9 `service bind9 restart`
+<br>
 Berikut code yang dimasukkan ke dalam Berlint:
 ```
 echo "
@@ -377,10 +365,8 @@ echo "
 www             IN      CNAME           operation.wise.b08.com.
 " > /etc/bind/operation/operation.wise.b08.com
 ```
-Restart bind9 nya
-```
-service bind9 restart
-```
+Melakukan restart bind9 `service bind9 restart`
+
 
 ## Soal 7
 ***Untuk informasi yang lebih spesifik mengenai Operation Strix, buatlah subdomain melalui Berlint dengan akses strix.operation.wise.yyy.com dengan alias www.strix.operation.wise.yyy.com yang mengarah ke Eden***<br><br>
@@ -402,10 +388,8 @@ strix           IN      A               10.7.2.3       ;IP Eden
 www.strix       IN      CNAME           strix.operation.wise.b08.com.
 " > /etc/bind/operation/operation.wise.b08.com
 ```
-Restart bind9 nya
-```
-service bind9 restart
-```
+<br>
+Melakukan restart bind9 `service bind9 restart`
 
 ## Soal 8
 ***Setelah melakukan konfigurasi server, maka dilakukan konfigurasi Webserver. Pertama dengan webserver www.wise.yyy.com. Pertama, Loid membutuhkan webserver dengan DocumentRoot pada /var/www/wise.yyy.com***<br><br>
