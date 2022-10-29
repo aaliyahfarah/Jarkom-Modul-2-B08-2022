@@ -384,7 +384,28 @@ service bind9 restart
 
 ## Soal 7
 ***Untuk informasi yang lebih spesifik mengenai Operation Strix, buatlah subdomain melalui Berlint dengan akses strix.operation.wise.yyy.com dengan alias www.strix.operation.wise.yyy.com yang mengarah ke Eden***<br><br>
-
+Membuat subdomain strix.operation.wise.b08.com dengan CNAMEnya pada berlint 
+```
+echo "
+\$TTL    604800
+@       IN      SOA     operation.wise.b08.com. root.operation.wise.b08.com. (
+                        2             ; Serial
+                        604800        ; Refresh
+                        86400         ; Retry
+                        2419200       ; Expire
+                        604800 )      ; Negative Cache TTL
+;
+@               IN      NS              operation.wise.b08.com.
+@               IN      A               10.7.2.3       ;IP Eden
+www             IN      CNAME           operation.wise.b08.com.
+strix           IN      A               10.7.2.3       ;IP Eden
+www.strix       IN      CNAME           strix.operation.wise.b08.com.
+" > /etc/bind/operation/operation.wise.b08.com
+```
+Restart bind9 nya
+```
+service bind9 restart
+```
 
 ## Soal 8
 ***Setelah melakukan konfigurasi server, maka dilakukan konfigurasi Webserver. Pertama dengan webserver www.wise.yyy.com. Pertama, Loid membutuhkan webserver dengan DocumentRoot pada /var/www/wise.yyy.com***<br><br>
@@ -415,3 +436,15 @@ service bind9 restart
 
 ## Soal 17
 ***Karena website www.eden.wise.yyy.com semakin banyak pengunjung dan banyak modifikasi sehingga banyak gambar-gambar yang random, maka Loid ingin mengubah request gambar yang memiliki substring “eden” akan diarahkan menuju eden.png. Bantulah Agent Twilight dan Organisasi WISE menjaga perdamaian!***<br><br>
+	
+	
+## Kendala
+  + Aaliyah Farah Adibah
+    	1. Baru dalam menggunakan GNS
+	2. GNS sempat error saat awal-awal praktikum
+	3. Internal Server Error saat diakhir-akhir padahal sudah mengikuti step-step yang ada di modul
+  + Rafael Asi Kristanto Tambunan
+	1.
+
+  + Sejati Bakti Raga
+	1.
