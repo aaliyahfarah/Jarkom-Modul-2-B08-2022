@@ -70,12 +70,75 @@ iface eth3 inet static
 	address 10.7.3.1
 	netmask 255.255.255.0
  ```
-
+ 
+ **WISE** 
+ ```
+auto eth0
+iface eth0 inet static
+	address 10.7.3.2
+	netmask 255.255.255.0
+	gateway 10.7.3.1
+ ```
+ 
+ **SSS** 
+ ```
+auto eth0
+iface eth0 inet static
+	address 10.7.1.2
+	netmask 255.255.255.0
+	gateway 10.7.1.1
+ ```
+ 
+ **Garden** 
+ ```
+auto eth0
+iface eth0 inet static
+	address 10.7.1.3
+	netmask 255.255.255.0
+	gateway 10.7.1.1
+ ```
+ 
+ **Berlint** 
+ ```
+ auto eth0
+ iface eth0 inet static
+	address 10.7.2.2
+	netmask 255.255.255.0
+	gateway 10.7.2.1
+ ```
+ 
+ **Eden** 
+ ```
+ auto eth0
+ iface eth0 inet static
+	address 10.7.2.3
+	netmask 255.255.255.0
+	gateway 10.7.2.1
+ ```
+ 
 ## Soal 1
 ***WISE akan dijadikan sebagai DNS Master, Berlint akan dijadikan DNS Slave, dan Eden akan digunakan sebagai Web Server. Terdapat 2 Client yaitu SSS, dan Garden. Semua node terhubung pada router Ostania, sehingga dapat mengakses internet***<br><br>
-Dilakukan pengaturan IP untuk setiap nodneya. Kelompok in memiliki prefix 10.7. sehingga pengaturan node
-
-
+Pada Foosha dibuat script yang berisi seperti di bawah agar semua node dapat terhubung dengan rooter sehingga dapat mengakses internet. 
+ ```
+ apt-get update
+ iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE -s 10.7.0.0/16
+ ```
+ <img alt="foosha" src="pic/fooshascript.png">
+ <img alt="run foosha script" src="pic/runfoosha.png">
+ 
+ Lalu, pada setiap node dibuat perintah sebagai berikut
+ ```
+ echo "nameserver 192.168.122.1" > /etc/resolv.conf
+ ```
+ Coba untuk **apt-get update** untuk mengetahui apakah sudah bisa mengakses internet dan mengupdate
+ 
+ Hasil:
+ <img alt="peta" src="pic/wiseupdate.png">
+ <img alt="peta" src="pic/sssupdate.png">
+ <img alt="peta" src="pic/gardenupdate.png">
+ <img alt="peta" src="pic/berlintupdate.png">
+ <img alt="peta" src="pic/edenupdate.png">
+ 
 ## Soal 2
 ***Untuk mempermudah mendapatkan informasi mengenai misi dari Handler, bantulah Loid membuat website utama dengan akses wise.yyy.com dengan alias www.wise.yyy.com pada folder wise***<br><br>
 
