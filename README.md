@@ -125,37 +125,266 @@ Pada Foosha dibuat script yang berisi seperti di bawah agar semua node dapat ter
  ```
  <img alt="foosha" src="pic/fooshascript.png">
  <img alt="run foosha script" src="pic/runfoosha.png">
- 
+ <br>
  Lalu, pada setiap node dibuat perintah sebagai berikut
  ```
  echo "nameserver 192.168.122.1" > /etc/resolv.conf
  ```
  Coba untuk **apt-get update** untuk mengetahui apakah sudah bisa mengakses internet dan mengupdate
  
+ <br>
  Hasil:
  <img alt="peta" src="pic/wiseupdate.png">
  <img alt="peta" src="pic/sssupdate.png">
  <img alt="peta" src="pic/gardenupdate.png">
  <img alt="peta" src="pic/berlintupdate.png">
  <img alt="peta" src="pic/edenupdate.png">
+ <br>
+ 
+Menjadikan WISE sebagai DNS Master
+```
+apt-get install bind9 -y
+
+echo 'zone "wise.b08.com" {
+type master;
+file "/etc/bind/wise/wise.b08.com";
+};'
+```
+
+Menjadikan Berlint sebagai DNS Slave
+```
+apt-get install bind9 -y
+
+echo '
+zone "wise.b08.com" {
+        type slave;
+        masters { 10.7.3.2; }; // Masukan IP Wise
+        file "/var/lib/bind/wise.b08.com";
+};
+' > /etc/bind/named.conf.local
+```
  
 ## Soal 2
 ***Untuk mempermudah mendapatkan informasi mengenai misi dari Handler, bantulah Loid membuat website utama dengan akses wise.yyy.com dengan alias www.wise.yyy.com pada folder wise***<br><br>
+Membuat website utama dan tambahkan record CNAME **wise.b08.com** pada folder wise.
+```
+echo 'zone "wise.b08.com" {
+        type master;
+        file "/etc/bind/wise/wise.b08.com";
+};' > /etc/bind/named.conf.local
+mkdir /etc/bind/wise
+echo "
+\$TTL    604800
+@       IN      SOA     wise.b08.com. root.wise.b08.com. (
+                        2               ; Serial
+                        604800          ; Refresh
+                        86400           ; Retry
+                        2419200         ; Expire
+                        604800 )        ; Negative Cache TTL
+;
+@               IN      NS      wise.b08.com.
+@               IN      A       10.7.3.2 ; IP Wise
+www             IN      CNAME   wise.b08.com.
+" > /etc/bind/wise/wise.b08.com
+```
+<br>
+Restart kembali bind9 nya
+
+```
+service bind9 restart
+```
 
 ## Soal 3
 ***Setelah itu ia juga ingin membuat subdomain eden.wise.yyy.com dengan alias www.eden.wise.yyy.com yang diatur DNS-nya di WISE dan mengarah ke Eden***<br><br>
+Membuat subdomain eden.wise.b08.com beserta CNAME nya yang mengarah ke Eden pada console wise.
+```
+echo "
+\$TTL    604800
+@       IN      SOA     wise.b08.com. root.wise.b08.com. (
+                                2       ; Serial
+                        604800          ; Refresh
+                        86400           ; Retry
+                        2419200         ; Expire
+                        604800 )        ; Negative Cache TTL
+;
+@               IN      NS      wise.b08.com.
+@               IN      A       10.7.3.2 ; IP Wise
+www             IN      CNAME   wise.b08.com.
+eden            IN      A       10.7.2.3 ; IP Eden
+www.eden        IN      CNAME   eden.wise.b08.com.
+" > /etc/bind/wise/wise.b08.com
+```
+Restart kembali bind9 nya
+```
+service bind9 restart
+```
 
 ## Soal 4
 ***Buat juga reverse domain untuk domain utama***<br><br>
+Membuat reverse yang merupakan keterbalikan prefix. Kelompok kami memiliki prefix 10.7 maka akan menjadi 7.10. Sehingga dibuat file baru yang berisi code pada no. 2 dan diganti prefixnya menjadi seperti di bawah ini pada console wise.
+```
+echo '
+zone "wise.b08.com" {
+        type master;
+        file "/etc/bind/wise/wise.b08.com";
+};
+
+zone "2.7.10.in-addr.arpa" {
+        type master;
+        file "/etc/bind/wise/2.7.10.in-addr.arpa";
+};' > /etc/bind/named.conf.local
+
+echo "
+\$TTL    604800
+@       IN      SOA     wise.b08.com. root.wise.b08.com. (
+                                2       ; Serial
+                        604800          ; Refresh
+                        86400           ; Retry
+                        2419200         ; Expire
+                        604800 )        ; Negative Cache TTL
+;
+2.7.10.in-addr.arpa.    IN      NS      wise.b08.com.
+2                       IN      PTR     wise.b08.com.
+"> /etc/bind/wise/2.7.10.in-addr.arpa
+```
+Restart kembali bind9 nya
+```
+service bind9 restart
+```
 
 ## Soal 5
 ***Agar dapat tetap dihubungi jika server WISE bermasalah, buatlah juga Berlint sebagai DNS Slave untuk domain utama***<br><br>
+Apabila bermasalah akan menghubungi Berlint yang dideklarasikan sebagai DNS Slave (nomor 1) pada console wise
+```
+echo '
+zone "wise.b08.com" {
+        type master;
+        notify yes;
+        also-notify {10.7.2.2;};  //IP Berlint 
+        allow-transfer {10.7.2.2;}; //IP Berlint 
+        file "/etc/bind/wise/wise.b08.com";
+};
+
+zone "2.7.10.in-addr.arpa" {
+        type master;
+        file "/etc/bind/wise/2.7.10.in-addr.arpa";
+};' > /etc/bind/named.conf.local
+```
+Restart kembali bind9 nya
+```
+service bind9 restart
+```
+Tambahkan deklarasi pada Garden dan juga Eden
+```
+echo "
+nameserver 10.7.3.2  //IP WISE
+nameserver 10.7.2.2  //IP BERLINT
+nameserver 10.7.2.3  //IP EDEN
+
+" > /etc/resolv.conf
+```
+Jangan lupa untuk menginstall dnsutils dan lynx pada Garden dan Eden
+```
+apt-get install dnsutils -y
+apt-get install lynx -y
+```
 
 ## Soal 6
 ***Karena banyak informasi dari Handler, buatlah subdomain yang khusus untuk operation yaitu operation.wise.yyy.com dengan alias www.operation.wise.yyy.com yang didelegasikan dari WISE ke Berlint dengan IP menuju ke Eden dalam folder operation***<br><br>
+Menambahkan subdomain untuk operation yaitu operation.wise.b08.com beserta CNAME. Berikut code yang dimasukkan ke dalam WISE:
+```
+echo "
+\$TTL    604800
+@       IN      SOA     wise.b08.com. root.wise.b08.com. (
+                        2               ; Serial
+                        604800          ; Refresh
+                        86400           ; Retry
+                        2419200         ; Expire
+                        604800 )        ; Negative Cache TTL
+;
+@               IN      NS      wise.b08.com.
+@               IN      A       10.7.2.3 ; IP Eden
+www             IN      CNAME   wise.b08.com.
+eden            IN      A       10.7.2.3 ; IP Eden
+www.eden        IN      CNAME   eden.wise.b08.com.
+ns1             IN      A       10.7.2.2; IP Berlint
+operation       IN      NS      ns1
+"> /etc/bind/wise/wise.b08.com
+
+echo "
+options {
+        directory \"/var/cache/bind\";
+
+        allow-query{any;};
+        auth-nxdomain no;    # conform to RFC1035
+        listen-on-v6 { any; };
+};
+" > /etc/bind/named.conf.options
+
+echo '
+zone "wise.b08.com" {
+        type master;
+        //notify yes;
+        //also-notify {10.7.2.2;};  Masukan IP Berlint 
+        file "/etc/bind/wise/wise.b08.com";
+        allow-transfer {10.7.2.2;}; // Masukan IP Berlint 
+};
+
+zone "2.7.10.in-addr.arpa" {
+        type master;
+        file "/etc/bind/wise/2.7.10.in-addr.arpa";
+};
+' >  /etc/bind/named.conf.local
+```
+Restart kembali bind9 nya
+```
+service bind9 restart
+```
+Berikut code yang dimasukkan ke dalam Berlint:
+```
+echo "
+options {
+        directory \"/var/cache/bind\";
+        allow-query{any;};
+        auth-nxdomain no;    # conform to RFC1035
+        listen-on-v6 { any; };
+};
+" > /etc/bind/named.conf.options
+echo '
+zone "wise.b08.com" {
+        type slave;
+        masters { 10.7.3.2; }; // Masukan IP Wise 
+        file "/var/lib/bind/wise.b08.com";
+};
+
+zone "operation.wise.b08.com"{
+        type master;
+        file "/etc/bind/operation/operation.wise.b08.com";
+};
+'> /etc/bind/named.conf.local
+mkdir /etc/bind/operation
+echo "
+\$TTL    604800
+@       IN      SOA     operation.wise.b08.com. root.operation.wise.b08.com. (
+                        2             ; Serial
+                        604800        ; Refresh
+                        86400         ; Retry
+                        2419200       ; Expire
+                        604800 )      ; Negative Cache TTL
+;
+@               IN      NS              operation.wise.b08.com.
+@               IN      A               10.7.2.3       ;IP Eden
+www             IN      CNAME           operation.wise.b08.com.
+" > /etc/bind/operation/operation.wise.b08.com
+```
+Restart bind9 nya
+```
+service bind9 restart
+```
 
 ## Soal 7
 ***Untuk informasi yang lebih spesifik mengenai Operation Strix, buatlah subdomain melalui Berlint dengan akses strix.operation.wise.yyy.com dengan alias www.strix.operation.wise.yyy.com yang mengarah ke Eden***<br><br>
+
 
 ## Soal 8
 ***Setelah melakukan konfigurasi server, maka dilakukan konfigurasi Webserver. Pertama dengan webserver www.wise.yyy.com. Pertama, Loid membutuhkan webserver dengan DocumentRoot pada /var/www/wise.yyy.com***<br><br>
