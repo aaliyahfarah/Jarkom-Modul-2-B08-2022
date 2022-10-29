@@ -450,7 +450,7 @@ service apache2 restart
 ## Soal 9
 ***Setelah itu, Loid juga membutuhkan agar url www.wise.yyy.com/index.php/home dapat menjadi menjadi www.wise.yyy.com/home***<br><br>
 	
-**Server Skypie**     
+**Server Eden**     
 konfigurasi file `/var/www/wise.b08.com/.htaccess` dengan    
 ```
 a2enmod rewrite
@@ -483,6 +483,33 @@ Melakukan restart service apache2 dengan `service apache2 restart`
 
 ## Soal 10
 ***Setelah itu, pada subdomain www.eden.wise.yyy.com, Loid membutuhkan penyimpanan aset yang memiliki DocumentRoot pada /var/www/eden.wise.yyy.com***<br><br>
+	
+**Server Eden**    
+konfigurasi file `/etc/apache2/sites-available/eden.wise.b08.com.conf` dengan  
+```
+<VirtualHost *:80>
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/eden.wise.b08.com
+        ServerName eden.wise.b08.com
+        ServerAlias www.eden.wise.b08.com
+
+        ErrorLog \${APACHE_LOG_DIR}/error.log
+        CustomLog \${APACHE_LOG_DIR}/access.log combined
+
+        <Directory /var/www/wise.b08.com>
+                Options +FollowSymLinks -Multiviews
+                AllowOverride All
+        </Directory>
+</VirtualHost>
+```
+Lalu aktifkan virtualhost dengan a2ensite, membuat direktori untuk documentroot di /var/www.eden.wise.b08.com dan jangan lupa untuk melakukan copy content ke documentroot dengan cara
+```
+a2ensite super.franky.t07.com
+mkdir /var/www/super.franky.t07.com
+cp -r /root/Praktikum-Modul-2-Jarkom/super.franky/. /var/www/super.franky.t07.com
+service apache2 restart
+```
+konfigurasi file `/var/www/eden.wise.b08.com/index.php` dengan `echo "<?php echo 'tes.. ini nomor 10' ?>"`
 
 ## Soal 11
 ***Akan tetapi, pada folder /public, Loid ingin hanya dapat melakukan directory listing saja***<br><br>
